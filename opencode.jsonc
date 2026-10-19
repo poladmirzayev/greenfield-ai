@@ -1,0 +1,13 @@
+﻿{
+  "$schema": "https://opencode.ai/config.json",
+  // Project-specific policies. The team framework's own policies live in .opencode/opencode.jsonc and merge with these.
+  // Policies hard-deny (never prompt, cannot be lifted by an agent). Order matters: the last match wins.
+  // Mirror each absolute rule from AGENTS.md "Hard rules" here when a command can be blocked.
+  "experimental": {
+    "policies": [
+      // Example: a database or cloud resource that must stay read-only. Replace with your own commands.
+      // { "action": "tool.use", "resource": "shell:bq rm *", "effect": "deny" },
+      // { "action": "tool.use", "resource": "shell:bq query *", "effect": "deny" }
+    ]
+  }
+}

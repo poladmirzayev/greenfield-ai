@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  // Team framework config (generic, copy with the rest of .opencode). Project-specific policies go in the root opencode.jsonc.
+  // The team lead orchestrates; roles live in agents/, workflow in skills/.
+  "default_agent": "team-lead",
+
+  // Policies hard-deny (never prompt, cannot be lifted by an agent). Order matters: the last match wins.
+  // Under `experimental` because OpenCode 2.0.26 drops a top-level `policies` key; docs say both forms work.
+  "experimental": {
+    "policies": [
+      // Secrets: never read or write real env files or key material (examples stay readable and editable).
+      { "action": "tool.use", "resource": "read:*.env", "effect": "deny" },
+      { "action": "tool.use", "resource": "read:*.env.*", "effect": "deny" },
+      { "action": "tool.use", "resource": "read:*.env.example", "effect": "allow" },
+      { "action": "tool.use", "resource": "edit:*.env", "effect": "deny" },
+      { "action": "tool.use", "resource": "edit:*.env.*", "effect": "deny" },
+      { "action": "tool.use", "resource": "edit:*.env.example", "effect": "allow" },
+      { "action": "tool.use", "resource": "read:*/.secrets/*", "effect": "deny" },
+      { "action": "tool.use", "resource": "read:*application_default_credentials.json", "effect": "deny" },
+      { "action": "tool.use", "resource": "read:*service-account*.json", "effect": "deny" },
+      // Merge only through the merge-recipe skill (so GitHub records "Merged"); no unleased force pushes.
+      { "action": "tool.use", "resource": "shell:gh pr merge *", "effect": "deny" },
+      { "action": "tool.use", "resource": "shell:git push --force *", "effect": "deny" },
+      { "action": "tool.use", "resource": "shell:git push -f *", "effect": "deny" }
+    ]
+  }
+}
